@@ -9,7 +9,7 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 SHERPA_ONNX_DIR=$(realpath $SCRIPT_DIR/../..)
 echo "SCRIPT_DIR: $SCRIPT_DIR"
 echo "SHERPA_ONNX_DIR: $SHERPA_ONNX_DIR"
-
+ 
 
 SHERPA_ONNX_VERSION=$(grep "SHERPA_ONNX_VERSION" $SHERPA_ONNX_DIR/CMakeLists.txt  | cut -d " " -f 2  | cut -d '"' -f 2)
 echo "SHERPA_ONNX_VERSION $SHERPA_ONNX_VERSION"

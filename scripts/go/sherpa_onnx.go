@@ -128,6 +128,7 @@ type OnlineRecognizerConfig struct {
 	Rule2MinTrailingSilence float32
 	Rule3MinUtteranceLength float32
 	CtcFstDecoderConfig     OnlineCtcFstDecoderConfig
+	BlankPenalty            float32
 }
 
 // It contains the recognition result for a online stream.
@@ -207,6 +208,8 @@ func NewOnlineRecognizer(config *OnlineRecognizerConfig) *OnlineRecognizer {
 	c.ctc_fst_decoder_config.graph = C.CString(config.CtcFstDecoderConfig.Graph)
 	defer C.free(unsafe.Pointer(c.ctc_fst_decoder_config.graph))
 	c.ctc_fst_decoder_config.max_active = C.int(config.CtcFstDecoderConfig.MaxActive)
+
+	c.blank_penalty = C.float(config.BlankPenalty)
 
 	recognizer := &OnlineRecognizer{}
 	recognizer.impl = C.CreateOnlineRecognizer(&c)
@@ -388,9 +391,10 @@ type OfflineModelConfig struct {
 
 // Configuration for the offline/non-streaming recognizer.
 type OfflineRecognizerConfig struct {
-	FeatConfig  FeatureConfig
-	ModelConfig OfflineModelConfig
-	LmConfig    OfflineLMConfig
+	FeatConfig   FeatureConfig
+	ModelConfig  OfflineModelConfig
+	LmConfig     OfflineLMConfig
+	BlankPenalty float32
 
 	// Valid decoding method: greedy_search, modified_beam_search
 	DecodingMethod string
@@ -490,7 +494,7 @@ func NewOfflineRecognizer(config *OfflineRecognizerConfig) *OfflineRecognizer {
 	defer C.free(unsafe.Pointer(c.decoding_method))
 
 	c.max_active_paths = C.int(config.MaxActivePaths)
-
+	c.blank_penalty = C.float(config.BlankPenalty)
 	recognizer := &OfflineRecognizer{}
 	recognizer.impl = C.CreateOfflineRecognizer(&c)
 
