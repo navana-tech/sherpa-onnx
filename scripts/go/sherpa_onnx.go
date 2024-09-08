@@ -137,7 +137,12 @@ type OnlineRecognizerConfig struct {
 
 // It contains the recognition result for a online stream.
 type OnlineRecognizerResult struct {
-	Text string
+	Text       string     // Required field
+	Tokens     *string    // Optional
+	TokensArr  *[]string  // Optional
+	Timestamps *[]float32 // Optional
+	Count      *int32     // Optional
+	Json       *string    // Optional
 }
 
 // The online recognizer class. It wraps a pointer from C.
@@ -328,6 +333,82 @@ func (recognizer *OnlineRecognizer) GetResult(s *OnlineStream) *OnlineRecognizer
 	result := &OnlineRecognizerResult{}
 	result.Text = C.GoString(p.text)
 
+	return result
+}
+
+// GetAllResults returns all fields, making non-required fields optional.
+func (recognizer *OnlineRecognizer) GetAllResults(s *OnlineStream) *OnlineRecognizerResult {
+	p := C.SherpaOnnxGetOnlineStreamResult(recognizer.impl, s.impl)
+	defer C.SherpaOnnxDestroyOnlineRecognizerResult(p)
+
+	// Check for nil pointers before conversion
+	var tokens *string
+	if p.tokens != nil {
+		t := C.GoString(p.tokens)
+		tokens = &t
+	}
+
+	var tokensArr *[]string
+	if p.tokens_arr != nil {
+		arr := cStringArrayToGoSlice(p.tokens_arr, p.count)
+		tokensArr = &arr
+	}
+
+	var timestamps *[]float32
+	if p.timestamps != nil {
+		ts := cFloatArrayToGoSlice(p.timestamps, p.count)
+		timestamps = &ts
+	}
+
+	var count *int32
+	if p.count != 0 {
+		c := int32(p.count)
+		count = &c
+	}
+
+	var jsonStr *string
+	if p.json != nil {
+		j := C.GoString(p.json)
+		jsonStr = &j
+	}
+
+	return &OnlineRecognizerResult{
+		Text:       C.GoString(p.text), // Required
+		Tokens:     tokens,             // Optional
+		TokensArr:  tokensArr,          // Optional
+		Timestamps: timestamps,         // Optional
+		Count:      count,              // Optional
+		Json:       jsonStr,            // Optional
+	}
+}
+
+// Helper function to convert C **_Ctype_char to Go []string
+func cStringArrayToGoSlice(cArray **C.char, length C.int) []string {
+	if cArray == nil || length == 0 {
+		return nil // Return empty slice if cArray is nil or length is zero
+	}
+
+	var result []string
+	slice := (*[1 << 28]*C.char)(unsafe.Pointer(cArray))[:length:length]
+	for _, str := range slice {
+		if str != nil {
+			result = append(result, C.GoString(str))
+		}
+	}
+	return result
+}
+
+// Helper function to convert C *_Ctype_float to Go []float32
+func cFloatArrayToGoSlice(cArray *C.float, length C.int) []float32 {
+	if cArray == nil || length == 0 {
+		return nil // Return empty slice if cArray is nil or length is zero
+	}
+
+	var result []float32
+	slice := (*[1 << 28]C.float)(unsafe.Pointer(cArray))[:length:length]
+	for _, f := range slice {
+		result = append(result, float32(f))
+	}
 	return result
 }
 
