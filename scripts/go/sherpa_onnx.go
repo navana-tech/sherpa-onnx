@@ -42,7 +42,9 @@ package sherpa_onnx
 // #include <stdlib.h>
 // #include "c-api.h"
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 // Configuration for online/streaming transducer models
 //
@@ -380,6 +382,24 @@ func (recognizer *OnlineRecognizer) GetAllResults(s *OnlineStream) *OnlineRecogn
 		Count:      count,              // Optional
 		Json:       jsonStr,            // Optional
 	}
+}
+
+func (recognizer *OnlineRecognizer) GetJsonResult(s *OnlineStream) *OnlineRecognizerResult {
+	p := C.SherpaOnnxGetOnlineStreamResult(recognizer.impl, s.impl)
+	defer C.SherpaOnnxDestroyOnlineRecognizerResult(p)
+
+	// Check if JSON field is not nil
+	result := &OnlineRecognizerResult{}
+	result.Text = C.GoString(p.text)
+	var jsonStr *string
+	if p.json != nil {
+		j := C.GoString(p.json)
+		jsonStr = &j
+	}
+
+	result.Json = jsonStr
+	return result
+
 }
 
 // Helper function to convert C **_Ctype_char to Go []string
