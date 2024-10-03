@@ -457,8 +457,6 @@ sherpa_onnx::OfflineRecognizerConfig convertConfig(
 
   recognizer_config.blank_penalty = config->blank_penalty;
 
-  recognizer_config.temperature_scale = config->temperature_scale;
-
   recognizer_config.rule_fsts = SHERPA_ONNX_OR(config->rule_fsts, "");
   recognizer_config.rule_fars = SHERPA_ONNX_OR(config->rule_fars, "");
 

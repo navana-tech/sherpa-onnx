@@ -523,13 +523,12 @@ type OfflineRecognizerConfig struct {
 	DecodingMethod string
 
 	// Used only when DecodingMethod is modified_beam_search.
-	MaxActivePaths   int
-	HotwordsFile     string
-	HotwordsScore    float32
-	BlankPenalty     float32
-	TemperatureScale float32
-	RuleFsts         string
-	RuleFars         string
+	MaxActivePaths int
+	HotwordsFile   string
+	HotwordsScore  float32
+	BlankPenalty   float32
+	RuleFsts       string
+	RuleFars       string
 }
 
 // It wraps a pointer from C
@@ -638,8 +637,6 @@ func NewOfflineRecognizer(config *OfflineRecognizerConfig) *OfflineRecognizer {
 	c.hotwords_score = C.float(config.HotwordsScore)
 
 	c.blank_penalty = C.float(config.BlankPenalty)
-
-	c.temperature_scale = C.float(config.TemperatureScale)
 
 	c.rule_fsts = C.CString(config.RuleFsts)
 	defer C.free(unsafe.Pointer(c.rule_fsts))

@@ -432,7 +432,6 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOfflineRecognizerConfig {
   const char *rule_fsts;
   const char *rule_fars;
   float blank_penalty;
-  float temperature_scale;
 } SherpaOnnxOfflineRecognizerConfig;
 
 SHERPA_ONNX_API typedef struct SherpaOnnxOfflineRecognizer
