@@ -73,6 +73,7 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOnlineZipformer2CtcModelConfig {
   const char *model;
 } SherpaOnnxOnlineZipformer2CtcModelConfig;
 
+
 SHERPA_ONNX_API typedef struct SherpaOnnxOnlineModelConfig {
   SherpaOnnxOnlineTransducerModelConfig transducer;
   SherpaOnnxOnlineParaformerModelConfig paraformer;
@@ -107,9 +108,16 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOnlineCtcFstDecoderConfig {
   int32_t max_active;
 } SherpaOnnxOnlineCtcFstDecoderConfig;
 
+SHERPA_ONNX_API typedef struct SherpaOnnxOnlineLMConfig {
+  const char *model;
+  float scale;
+} SherpaOnnxOnlineLMConfig;
+
+
 SHERPA_ONNX_API typedef struct SherpaOnnxOnlineRecognizerConfig {
   SherpaOnnxFeatureConfig feat_config;
   SherpaOnnxOnlineModelConfig model_config;
+  SherpaOnnxOnlineLMConfig lm_config;
 
   /// Possible values are: greedy_search, modified_beam_search
   const char *decoding_method;

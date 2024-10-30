@@ -129,6 +129,11 @@ SherpaOnnxOnlineRecognizer *SherpaOnnxCreateOnlineRecognizer(
   recognizer_config.ctc_fst_decoder_config.max_active =
       SHERPA_ONNX_OR(config->ctc_fst_decoder_config.max_active, 3000);
 
+  recognizer_config.lm_config.model =
+      SHERPA_ONNX_OR(config->lm_config.model, "");
+  recognizer_config.lm_config.scale =
+      SHERPA_ONNX_OR(config->lm_config.scale, 1.0);
+
   recognizer_config.rule_fsts = SHERPA_ONNX_OR(config->rule_fsts, "");
   recognizer_config.rule_fars = SHERPA_ONNX_OR(config->rule_fars, "");
 
