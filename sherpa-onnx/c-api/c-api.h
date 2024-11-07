@@ -111,6 +111,7 @@ SHERPA_ONNX_API typedef struct SherpaOnnxOnlineCtcFstDecoderConfig {
 SHERPA_ONNX_API typedef struct SherpaOnnxOnlineLMConfig {
   const char *model;
   float scale;
+  int32_t num_threads;
 } SherpaOnnxOnlineLMConfig;
 
 

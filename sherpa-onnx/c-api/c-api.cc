@@ -133,7 +133,9 @@ SherpaOnnxOnlineRecognizer *SherpaOnnxCreateOnlineRecognizer(
       SHERPA_ONNX_OR(config->lm_config.model, "");
   recognizer_config.lm_config.scale =
       SHERPA_ONNX_OR(config->lm_config.scale, 1.0);
-
+  recognizer_config.lm_config.num_threads =
+      SHERPA_ONNX_OR(config->lm_config.num_threads, 1);
+      
   recognizer_config.rule_fsts = SHERPA_ONNX_OR(config->rule_fsts, "");
   recognizer_config.rule_fars = SHERPA_ONNX_OR(config->rule_fars, "");
 
